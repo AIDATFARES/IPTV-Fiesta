@@ -1,3 +1,4 @@
+import React from "react";
 import { notFound } from "next/navigation";
 import { blogPosts } from "@/data/blog";
 import Link from "next/link";
@@ -5,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ArrowLeft } from "lucide-react";
 import ArticleFAQAccordion from "@/components/blog/ArticleFAQAccordion";
+import BlogOfferCard from "@/components/blog/BlogOfferCard";
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({
@@ -159,9 +161,30 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
           prose-th:text-on-surface prose-th:border-b prose-th:border-outline-variant prose-th:py-2
           prose-td:border-b prose-td:border-outline-variant/50 prose-td:py-2"
         >
-          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-            {beforeFaq}
-          </ReactMarkdown>
+          {(() => {
+            const blocks = beforeFaq.split(/(?=\n## )/);
+            
+            if (blocks.length <= 2) {
+              return (
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                  {beforeFaq}
+                </ReactMarkdown>
+              );
+            }
+
+            const firstCtaIndex = Math.min(2, blocks.length - 1);
+            const secondCtaIndex = Math.max(firstCtaIndex + 1, Math.floor(blocks.length / 2));
+
+            return blocks.map((block, index) => (
+              <React.Fragment key={index}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                  {block}
+                </ReactMarkdown>
+                {index === firstCtaIndex && <BlogOfferCard />}
+                {index === secondCtaIndex && index !== firstCtaIndex && <BlogOfferCard />}
+              </React.Fragment>
+            ));
+          })()}
 
           {faqs.length > 0 && (
             <div className="mt-12 mb-8">

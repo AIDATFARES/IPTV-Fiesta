@@ -3121,7 +3121,7 @@ With a stable network, compatible hardware, a reliable player, and properly auth
     author: "IPTV FIESTA Team",
     category: "Guides",
     coverImage: "/images/blog/how-to-set-up-iptv-on-smart-tv/iptv-smart-tv-setup-guide.webp",
-    content: \`
+    content: `
 # How to Set Up IPTV on Smart TV in 2026: Complete Step-by-Step Guide
 
 ## Introduction
@@ -3422,7 +3422,6 @@ Setting up IPTV on a Smart TV in 2026 is easier than ever. By taking a few minut
 Whether you are navigating the Samsung Smart Hub, the LG Content Store, or the Google Play Store, the key is choosing the right app and ensuring your home network is optimized for streaming. Connect via Ethernet if possible, double-check your Xtream Codes, and you will be watching your favorite live channels and movies in no time.
 
 If you are ready to cut the cord and experience premium television, **IPTV FIESTA** is here to deliver. With our vast selection of channels, massive VOD library, and dedicated support, we make streaming simple and reliable. Visit our **[Homepage](/)** to explore our features, or check our **[FAQ](/faq)** if you have any more questions. Elevate your Smart TV experience today!
-    \`
+    `
   }
 ];
-\n

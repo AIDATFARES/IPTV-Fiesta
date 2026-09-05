@@ -28,6 +28,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     alternates: {
       canonical: `/blog/${post.slug}`,
     },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      url: `/blog/${post.slug}`,
+      type: 'article',
+      images: post.coverImage ? [{ url: post.coverImage }] : undefined,
+    },
   };
 }
 
@@ -67,6 +74,53 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
   const { beforeFaq, faqs, afterFaq } = parseArticleContent(post.content);
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.title,
+    "description": post.description,
+    "image": post.coverImage ? `https://www.fiestaiptv.shop${post.coverImage}` : undefined,
+    "datePublished": post.date,
+    "author": {
+      "@type": "Organization",
+      "name": post.author,
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "IPTV FIESTA",
+      "url": "https://www.fiestaiptv.shop"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://www.fiestaiptv.shop/blog/${post.slug}`
+    }
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.fiestaiptv.shop"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "https://www.fiestaiptv.shop/blog"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": post.title,
+        "item": `https://www.fiestaiptv.shop/blog/${post.slug}`
+      }
+    ]
+  };
+
   const faqJsonLd = faqs.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -81,6 +135,8 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   } : null;
 
   const markdownComponents = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    h1: () => null,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     h2: ({ node, ...props }: any) => <h2 className="text-2xl font-bold mt-12 mb-6 text-on-surface" {...props} />,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -112,6 +168,14 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
   return (
     <main className="flex-grow pt-32 pb-24 px-margin-mobile md:px-margin-desktop max-w-[1024px] mx-auto w-full relative z-10 text-format-blog">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {faqJsonLd && (
         <script
           type="application/ld+json"
